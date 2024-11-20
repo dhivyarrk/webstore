@@ -3,7 +3,7 @@ from backend.database import db
 class User(db.Model):
     __tablename__ = 'users'
 
-    user_id = db.Column(db.Integer, primary_key=True, , unique=True)
+    user_id = db.Column(db.Integer, primary_key=True, unique=True)
     user_name = db.Column(db.String(), nullable=False)
     join_date = db.Column(db.Date, nullable=False)
     membership = db.Column(db.String(), nullable=False, default='regular')
