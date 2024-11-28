@@ -1,0 +1,31 @@
+<h1 > Sign up form</h1>
+<form (ngSubmit)="onSubmit()" class="un" #signupForm="ngForm">
+  <label for="user_name">User Name:</label>
+  <input id="user_name" name="user_name" [(ngModel)]="user.user_name" required /><br>
+
+  <label for="password">Password:</label>
+  <input id="password" name="password" [(ngModel)]="user.password" type="password" required />
+
+
+  <label for="membership">Membership:</label>
+  <select id="membership" name="membership" [(ngModel)]="user.membership">
+    <option value="regular">Regular</option>
+    <option value="premium">Premium</option>
+  </select><br>
+
+  <label for="contact_number">Contact Number:</label>
+  <input id="contact_number" name="contact_number" [(ngModel)]="user.contact_number" type="number" /><br>
+
+
+  <label for="email_id">Email:</label>
+  <input id="email_id" name="email_id" [(ngModel)]="user.email_id" type="email" required /><br>
+
+
+  <label for="user_type">User Type:</label>
+  <select id="user_type" name="user_type" [(ngModel)]="user.user_type">
+    <option value="customer">Customer</option>
+    <option value="admin">Admin</option>
+  </select><br>
+
+  <button type="submit">Signup</button>
+</form>
