@@ -15,5 +15,10 @@ export class AuthenticationService {
     console.log("user is", user);
     return this.http.post(`${API_URL}/signup`, user);
   }
-
+  logout(): void {
+    // Clear any stored authentication data (like tokens)
+    localStorage.removeItem('token'); // Assuming token is stored in localStorage
+    localStorage.removeItem('user_type'); // Assuming token is stored in localStorage
+    sessionStorage.clear(); // Optionally clear session storage
+  }
 }

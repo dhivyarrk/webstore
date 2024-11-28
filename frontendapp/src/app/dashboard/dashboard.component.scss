@@ -1,0 +1,75 @@
+// Variables for colors
+$primary-color: #4CAF50; // Green
+$text-color: #ffffff;
+$hover-color: #3e8e41;
+$background-color: #f4f4f4;
+
+// Navbar Styling
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $primary-color;
+  padding: 0.5rem 1rem;
+
+  &__brand {
+    color: $text-color;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  &__menu {
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+
+      li {
+        margin-left: 1rem;
+
+        a {
+          text-decoration: none;
+          color: $text-color;
+          padding: 0.5rem 1rem;
+          border-radius: 5px;
+
+          &:hover {
+            background-color: $hover-color;
+          }
+
+          &.active {
+            background-color: darken($primary-color, 10%);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Content Styling
+.content {
+  padding: 1rem;
+  background-color: $background-color;
+}
+
+@media (max-width: 768px) {
+    .navbar__menu ul {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .navbar__menu li {
+      margin: 0.5rem 0;
+    }
+  }
+
+  .btn {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+  }

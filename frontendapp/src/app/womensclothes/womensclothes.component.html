@@ -1,0 +1,86 @@
+<div class="add-product-container" *ngIf="user_type === 'admin'">
+    <h2>Add New Product</h2>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="productName">Product Name</label>
+        <input id="productName" formControlName="productName" type="text" class="form-control" />
+        <div *ngIf="productName?.invalid && productName?.touched" class="error-message">
+          Product Name is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="productDescription">Product Description</label>
+        <textarea id="productDescription" formControlName="productDescription" class="form-control"></textarea>
+        <div *ngIf="productDescription?.invalid && productDescription?.touched" class="error-message">
+          Product Description is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="categoryId">Category ID [1-4]</label>
+        <input id="categoryId" formControlName="categoryId" type="number" class="form-control" />
+        <div *ngIf="categoryId?.invalid && categoryId?.touched" class="error-message">
+          Category ID is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="availability">Availability</label>
+        <input id="availability" formControlName="availability" type="number" class="form-control" />
+        <div *ngIf="availability?.invalid && availability?.touched" class="error-message">
+          Availability is required.
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">Add Product</button>
+    </form>
+  </div>
+
+  <div class="products-container">
+
+    <h2 *ngIf="user_type === 'admin'" >Manage Products</h2>
+    <h2 *ngIf="user_type === 'customer'" >Products</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Availability</th>
+          <th *ngIf="user_type === 'admin'">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products">
+          <td>{{ product.product_id }}</td>
+          <td>
+            <input
+              [(ngModel)]="product.product_name"
+              placeholder="Product Name"
+            />
+          </td>
+          <td>
+            <input
+              [(ngModel)]="product.product_description"
+              placeholder="Product Description"
+            />
+          </td>
+          <td>
+            <input [(ngModel)]="product.category_id" placeholder="Category ID" />
+          </td>
+          <td>
+            <input [(ngModel)]="product.availability" placeholder="Availability" />
+          </td>
+          <td *ngIf="user_type === 'admin'">
+            <button (click)="modifyProduct(product.product_id, product)">
+              Modify
+            </button>
+            <button (click)="deleteProduct(product.product_id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
