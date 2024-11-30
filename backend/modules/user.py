@@ -43,3 +43,14 @@ class UserSignup(restful.Resource):
                 })
         except Exception as e:
             return jsonify({"error": str(e)})
+
+class UserList(restful.Resource):
+    def get(self):
+        token = request.headers.get('Authorization')  # Expecting token in headers
+        if token and token.startswith('Bearer '):
+            token = token.split(' ')[1]
+            user_id = SessionCheckResource.verify_token(token)
+            if user_id:
+                user = User.query.get(user_id)
+                return jsonify({"message": f"Hello, {user.user_name}"})
+        return jsonify({"error": "Unauthorized"})

@@ -3,12 +3,13 @@ from backend.database import db
 class User(db.Model):
     __tablename__ = 'users'
 
-    user_id = db.Column(db.Integer, primary_key=True, unique=True)
+    user_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     user_name = db.Column(db.String(), nullable=False)
+    password_hash = db.Column(db.String(), nullable=False)  # Store hashed password
     join_date = db.Column(db.Date, nullable=False)
     membership = db.Column(db.String(), nullable=False, default='regular')
-    contact_number = db.Column(db.Integer)
-    email_id = db.Column(db.String(), nullable=False)
+    contact_number = db.Column(db.Integer, unique=True)
+    email_id = db.Column(db.String(), nullable=False, unique=True)
     user_type = db.Column(db.String(), nullable=False, default='customer')
 
     __table_args__ = (
@@ -23,7 +24,7 @@ class User(db.Model):
 class WomensProducts(db.Model):
     __tablename__ = 'womensproducts'
 
-    product_id = db.Column(db.Integer, primary_key=True, unique=True)
+    product_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     product_name = db.Column(db.String(), nullable=False)
     product_description = db.Column(db.String(), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'), nullable=False)
@@ -32,7 +33,7 @@ class WomensProducts(db.Model):
 class KidsProducts(db.Model):
     __tablename__ = 'kidsproducts'
 
-    product_id = db.Column(db.Integer, primary_key=True, unique=True)
+    product_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     product_name = db.Column(db.String(), nullable=False)
     product_description = db.Column(db.String(), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'), nullable=False)
@@ -41,7 +42,7 @@ class KidsProducts(db.Model):
 class Categories(db.Model):
     __tablename__ = 'categories'
 
-    category_id = db.Column(db.Integer, primary_key=True, unique=True)
+    category_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     category_name = db.Column(db.String(), default='regular', nullable=False)
     category_description = db.Column(db.String(), nullable=False)
 
@@ -52,7 +53,7 @@ class Categories(db.Model):
 class Orders(db.Model):
     __tablename__ = 'orders'
 
-    order_id = db.Column(db.Integer, primary_key=True, unique=True)
+    order_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     payment_status = db.Column(db.String(), nullable=False, default='pending')
 
@@ -63,7 +64,7 @@ class Orders(db.Model):
 class Shipments(db.Model):
     __tablename__ = 'shipments'
 
-    shipment_id = db.Column(db.Integer, primary_key=True, unique=True)
+    shipment_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id'))
     shipment_status = db.Column(db.String(), default='not_initiated')
     shipped_from_warehouse_date = db.Column(db.Date)
