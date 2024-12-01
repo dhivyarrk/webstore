@@ -34,7 +34,7 @@ def create_app():
     oauth.register(
     name= 'idp',
     #name='flask-app-project-442612',  # Name of your IdP
-    client_id=os.getenv('client_id')
+    client_id=os.getenv('client_id'),
     client_secret=os.getenv('client_secret'),
     access_token_url=os.getenv('access_token_url'),
     authorize_url=os.getenv('authorize_url'),
