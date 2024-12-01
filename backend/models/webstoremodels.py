@@ -8,7 +8,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(), nullable=False)  # Store hashed password
     join_date = db.Column(db.Date, nullable=False)
     membership = db.Column(db.String(), nullable=False, default='regular')
-    contact_number = db.Column(db.Integer, unique=True)
+    contact_number = db.Column(db.Integer)
     email_id = db.Column(db.String(), nullable=False, unique=True)
     user_type = db.Column(db.String(), nullable=False, default='customer')
 
