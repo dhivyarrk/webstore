@@ -21,7 +21,7 @@ def create_app():
         SECRET_KEY = "Miy_Secret_Key"
     )
     app.config.from_object(DbConfig)
-    CORS(app)
+    CORS(app, supports_credentials=True)
     #CORS(app, supports_credentials=True, origins=["http://127.0.0.1:4200", "http://localhost:4200/"])
     #CORS(app, supports_credentials=True, origins="https://booboofashions.netlify.app/")
    
