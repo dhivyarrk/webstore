@@ -29,7 +29,14 @@ class WomensProducts(db.Model):
     product_description = db.Column(db.String(), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'), nullable=False)
     availability = db.Column(db.Integer)   
-
+    def to_dict(self):
+        return {
+            "product_id": self.product_id,
+            "product_name": self.product_name,
+            "product_description": self.product_description,
+            "category_id": self.category_id,
+            "availability": self.availability
+        }
 class KidsProducts(db.Model):
     __tablename__ = 'kidsproducts'
 
@@ -38,6 +45,15 @@ class KidsProducts(db.Model):
     product_description = db.Column(db.String(), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'), nullable=False)
     availability = db.Column(db.Integer)
+
+    def to_dict(self):
+        return {
+            "product_id": self.product_id,
+            "product_name": self.product_name,
+            "product_description": self.product_description,
+            "category_id": self.category_id,
+            "availability": self.availability
+        }
 
 class Categories(db.Model):
     __tablename__ = 'categories'

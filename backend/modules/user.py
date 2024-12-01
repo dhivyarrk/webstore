@@ -11,6 +11,7 @@ import random
 
 class UserSignup(restful.Resource):
     def post(self):
+        print("are in user post")
         data = request.json
 
         try:
@@ -54,3 +55,29 @@ class UserList(restful.Resource):
                 user = User.query.get(user_id)
                 return jsonify({"message": f"Hello, {user.user_name}"})
         return jsonify({"error": "Unauthorized"})
+
+
+class UserSignin(restful.Resource):
+    def post(self):
+        data = request.json
+        email_id = data.get('email_id')
+        password = data.get('password')
+        if not email_id or not password:
+            return jsonify({"error": "Email and password are required"}), 400
+
+        user = User.query.filter_by(email_id=email_id).first()
+
+        if user and check_password_hash(user.password_hash, password):
+            token = SessionCheckResource.generate_token(user.user_id)
+            return jsonify({
+                "message": "Signin successful",
+                "user": {
+                    "user_name": user.user_name,
+                    "membership": user.membership,
+                    "user_type": user.user_type,
+                    "email_id": user.email_id,
+                    "token": token
+                }
+            })
+        else:
+            return jsonify({"error": "Invalid credentials"})

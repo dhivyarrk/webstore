@@ -9,7 +9,6 @@ import datetime
 import random
 from backend.modules.sesions import SessionCheckResource
 from backend.models.webstoremodels import User
-from backend.models.webstoremodels import User, WomensProducts, KidsProducts, Categories, Orders, Shipments
 
 
 #import generate_token
@@ -20,8 +19,7 @@ from backend.models.webstoremodels import User, WomensProducts, KidsProducts, Ca
 #blueprint = Blueprint('db1', __name__, url_prefix='/db1')
 blueprint = Blueprint('db1',__name__)
 
-class WomensclothesList(restful.Resource):
-    print("calling womens clothes")
+class WomensaccessoriesList(restful.Resource):
     def get(self):
         token = request.headers.get('Authorization')  # Expecting token in headers
         if token and token.startswith('Bearer '):
@@ -29,7 +27,8 @@ class WomensclothesList(restful.Resource):
             user_id = SessionCheckResource.verify_token(token)
             user = User.query.get(user_id)
             if user.user_type == 'admin' or user.user_type == 'customer' or user.user_type == 'employee':
-                products = WomensProducts.query.all()
+                products = WomensProducts.query.filter_by(category_id=2).all()
+                print(products)
                 product_list = [product.to_dict() for product in products]  # Convert each object
                 return jsonify(product_list)
 
@@ -47,7 +46,7 @@ class WomensclothesList(restful.Resource):
                     new_product = WomensProducts(
                         product_name=data['productName'],
                         product_description=data['productDescription'],
-                        category_id=data['categoryId'],
+                        category_id=2,
                         availability=data.get('availability', 0)
                     )
                     db.session.add(new_product)
@@ -57,9 +56,8 @@ class WomensclothesList(restful.Resource):
                     return jsonify({"error": str(e)})
             return jsonify({"error": "Unauthorized"}), 401
 
-class Womensclothes(restful.Resource):
+class Womensaccessories(restful.Resource):
     def delete(self, product_id):
-        print("am I here")
         token = request.headers.get('Authorization')  # Expecting token in headers
         if token and token.startswith('Bearer '):
             token = token.split(' ')[1]
@@ -91,12 +89,10 @@ class Womensclothes(restful.Resource):
             if not product:
                 return jsonify({'message': 'Product not found'})
             # Update product fields from request JSON
-
-            
             data = request.json
             product.product_name = data.get('product_name', product.product_name)
             product.product_description = data.get('product_description', product.product_description)
-            product.category_id = data.get('category_id', product.category_id)
+            product.category_id = 2
             product.availability = data.get('availability', product.availability)
             db.session.commit()
             return jsonify({'message': 'Product updated successfully'})
