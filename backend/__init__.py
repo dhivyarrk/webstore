@@ -13,6 +13,7 @@ from backend.modules.womensclothes import WomensclothesList, Womensclothes
 from backend.modules.womensaccessories import WomensaccessoriesList, Womensaccessories
 from backend.modules.kidsclothes import KidsclothesList, Kidsclothes
 from backend.modules.kidsshoes import KidsshoesList, Kidsshoes
+from authlib.integrations.flask_client import OAuth
 
 def create_app():
     app = Flask(__name__)
@@ -28,6 +29,19 @@ def create_app():
      #, origins=['http://localhost:3000'])
 
     #init_api(app)
+    oauth = OAuth(app)
+    oauth.register(
+    name= 'idp',
+    #name='flask-app-project-442612',  # Name of your IdP
+    client_id=os.getenv('client_id')
+    client_secret=os.getenv('client_secret'),
+    access_token_url=os.getenv('access_token_url'),
+    authorize_url=os.getenv('authorize_url'),
+    #api_base_url='https://idp.com/api',
+    client_kwargs={'scope': 'openid profile email'},
+    server_metadata_url= os.getenv('server_metadata_url')
+    )
+
     db.init_app(app)
 
     migrate = Migrate(app, db)
@@ -45,6 +59,26 @@ def create_app():
     api.add_resource(Kidsclothes,  '/kidsclothes/<string:product_id>', methods=['DELETE', 'PUT'])
     api.add_resource(KidsshoesList, '/kidsshoes')
     api.add_resource(Kidsshoes,  '/kidsshoes/<string:product_id>', methods=['DELETE', 'PUT'])
+
+    @app.route('/login')
+    def login():
+        #return 'this is login'
+        return oauth.idp.authorize_redirect(redirect_uri='https://booboofashionsgunic.onrender.com/callback')
+
+    @app.route('/callback')
+    def callback():
+        token = oauth.idp.authorize_access_token()
+        print(token)
+        user_info = token['userinfo']
+        #user_info = oauth.idp.parse_id_token(token)
+        session['user'] = user_info
+
+        return redirect('https://booboofashions.netlify.app/dashboard')
+
+    @app.route('/logout')
+    def logout():
+        session.pop('user', None)
+        return redirect('https://booboofashions.netlify.app/dashboard/')
 
     return app
 """
