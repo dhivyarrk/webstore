@@ -106,7 +106,8 @@ def create_app():
         try:
             user = User.query.filter_by(email_id=token['userinfo']["email"]).first()
             if user:
-                return redirect('http://localhost:4200/callback')
+                #return redirect('http://localhost:4200/callback')
+                return redirect('https://booboofashions.netlify.app/callback')
             else:
                 hashed_password = generate_password_hash("12345", method='pbkdf2:sha256') # Todo: dummy password
                 new_user = User(
@@ -122,7 +123,9 @@ def create_app():
                 #print(new_user)
                 db.session.add(new_user)
                 db.session.commit()
-                return redirect('http://localhost:4200/callback')
+                #return redirect('http://localhost:4200/callback')
+                return redirect('https://booboofashions.netlify.app/callback')
+
         except Exception as e:
             return jsonify({"error": str(e)})
 
@@ -159,7 +162,8 @@ def create_app():
     def logout():
         session.pop('user', None)
         #return redirect('https://booboofashions.netlify.app/dashboard/')
-        return redirect('http://localhost:4200/dashboard')
+        #return redirect('http://localhost:4200/dashboard')
+        return redirect('https://booboofashions.netlify.app/dashboard')
 
     return app
 """
