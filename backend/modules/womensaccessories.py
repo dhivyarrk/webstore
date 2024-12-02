@@ -46,6 +46,7 @@ class WomensaccessoriesList(restful.Resource):
                     new_product = WomensProducts(
                         product_name=data['productName'],
                         product_description=data['productDescription'],
+                        product_price=data['productPrice'],
                         category_id=2,
                         availability=data.get('availability', 0)
                     )
@@ -92,6 +93,7 @@ class Womensaccessories(restful.Resource):
             data = request.json
             product.product_name = data.get('product_name', product.product_name)
             product.product_description = data.get('product_description', product.product_description)
+            product.price = data.get('product_price', product.product_price)
             product.category_id = 2
             product.availability = data.get('availability', product.availability)
             db.session.commit()
