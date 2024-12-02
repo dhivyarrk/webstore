@@ -45,6 +45,7 @@ class KidsProducts(db.Model):
     product_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     product_name = db.Column(db.String(), nullable=False)
     product_description = db.Column(db.String(), nullable=False)
+    product_price = db.Column(db.Integer(), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'), nullable=False)
     availability = db.Column(db.Integer)
 
@@ -53,6 +54,7 @@ class KidsProducts(db.Model):
             "product_id": self.product_id,
             "product_name": self.product_name,
             "product_description": self.product_description,
+            "product_price": self.product_price,
             "category_id": self.category_id,
             "availability": self.availability
         }
