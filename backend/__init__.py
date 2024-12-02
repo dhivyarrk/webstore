@@ -45,7 +45,7 @@ def create_app():
     #init_api(app)
     oauth = OAuth(app)
 
-    """
+    
     oauth.register(
     name= 'idp',
     
@@ -58,7 +58,7 @@ def create_app():
     client_kwargs={'scope': 'openid profile email'},
     server_metadata_url= os.getenv('server_metadata_url')
     )
-    """
+    
 
     db.init_app(app)
 
