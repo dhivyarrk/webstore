@@ -45,7 +45,6 @@ def create_app():
     #init_api(app)
     oauth = OAuth(app)
 
-    
     oauth.register(
     name= 'idp',
     
@@ -58,7 +57,7 @@ def create_app():
     client_kwargs={'scope': 'openid profile email'},
     server_metadata_url= os.getenv('server_metadata_url')
     )
-    
+
 
     db.init_app(app)
 
@@ -106,11 +105,13 @@ def create_app():
         #dummy contact_number to avoid gathering personal info for now
         #contact_number = random.randint(10**((random.randint(1, 15)) - 1), 10**(random.randint(1, 15)) - 1)
         try:
-            user = User.query.filter_by(email_id=token['userinfo_session']["email"]).first()
+            user = User.query.filter_by(email_id=token['userinfo']["email"]).first()
             if user:
+                print("did I find user")
                 #return redirect('http://localhost:4200/callback')
                 return redirect('https://booboofashions.netlify.app/callback')
             else:
+                print("am i in else")
                 hashed_password = generate_password_hash("12345", method='pbkdf2:sha256') # Todo: dummy password
                 new_user = User(
                     #user_id=random.randint(0, 100),
@@ -129,6 +130,7 @@ def create_app():
                 return redirect('https://booboofashions.netlify.app/callback')
 
         except Exception as e:
+            print("i am in except though")
             return jsonify({"error": str(e)})
 
 
