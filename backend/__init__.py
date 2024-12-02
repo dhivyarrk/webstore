@@ -21,7 +21,7 @@ import os
 import datetime
 #import random
 
-s_value = "something"
+userinfo_session = "something"
 def create_app():
     app = Flask(__name__)
 
@@ -97,14 +97,16 @@ def create_app():
         #user_info = oauth.idp.parse_id_token(token)
         session['user'] = user_info
         #print(session)
-        global userinfo
-        userinfo = session['user']
+        global userinfo_session
+        userinfo_session = session['user']
+        print("in global")
+        print(userinfo_session)
         #print("incallabacl")
         #print(userinfo)
         #dummy contact_number to avoid gathering personal info for now
         #contact_number = random.randint(10**((random.randint(1, 15)) - 1), 10**(random.randint(1, 15)) - 1)
         try:
-            user = User.query.filter_by(email_id=token['userinfo']["email"]).first()
+            user = User.query.filter_by(email_id=token['userinfo_session']["email"]).first()
             if user:
                 #return redirect('http://localhost:4200/callback')
                 return redirect('https://booboofashions.netlify.app/callback')
@@ -134,8 +136,8 @@ def create_app():
     def user_info():
         try:
             print("in user_info")
-            print(userinfo)
-            user = User.query.filter_by(email_id=userinfo["email"]).first()
+            print(userinfo_session)
+            user = User.query.filter_by(email_id=userinfo_session["email"]).first()
             if user:
                 token = SessionCheckResource.generate_token(user.user_id)
                 return jsonify({
