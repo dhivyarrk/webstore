@@ -43,7 +43,11 @@ class UserSignup(restful.Resource):
                     }
                 })
         except Exception as e:
-            return jsonify({"error": str(e)})
+            if 'email_id' in str(e.orig):
+                return jsonify({"error": "The email ID is already in use."})
+            else:
+                #return jsonify({"error": "Database integrity error occurred."})
+                return jsonify({"error": str(e)})
 
 class UserList(restful.Resource):
     def get(self):
