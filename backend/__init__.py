@@ -40,7 +40,7 @@ def create_app():
     app.config['SESSION_PERMANENT'] = True    # Optional: set to True if sessions should persist across browser restarts
     Session(app)
     app.config.from_object(DbConfig)
-    CORS(app, supports_credentials=True)
+    CORS(app, supports_credentials=True, origins=["https://booboofashions.netlify.app"])
     #CORS(app, supports_credentials=True, origins=["http://127.0.0.1:4200", "http://localhost:4200/"])
     #CORS(app, supports_credentials=True, origins="https://booboofashions.netlify.app/")
    
