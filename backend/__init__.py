@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask import Flask, session, redirect, url_for, request
 from werkzeug.security import generate_password_hash
+from urllib.parse import urlencode, quote
 
 from backend.database import db
 from backend.models.webstoremodels import User, WomensProducts, KidsProducts, Categories, Orders, Shipments
@@ -19,6 +20,7 @@ from flask_session import Session
 import uuid
 import os
 import datetime
+
 #import random
 
 userinfo_session = "something"
@@ -117,10 +119,20 @@ def create_app():
         #contact_number = random.randint(10**((random.randint(1, 15)) - 1), 10**(random.randint(1, 15)) - 1)
         try:
             user = User.query.filter_by(email_id=token['userinfo']["email"]).first()
+            token = SessionCheckResource.generate_token(user.user_id)
+
             if user:
                 print("did I find user")
+                user_data = {
+                    "user_name": user.user_name,
+                    "membership": user.membership,
+                    "user_type": user.user_type,
+                    "token": token
+                }
+                query_string = urlencode(user_data, quote_via=quote)
+                return redirect(f'https://booboofashions.netlify.app/callback?{query_string}')
                 #return redirect('http://localhost:4200/callback')
-                return redirect('https://booboofashions.netlify.app/callback')
+                #return redirect('https://booboofashions.netlify.app/callback')
             else:
                 print("am i in else")
                 hashed_password = generate_password_hash("12345", method='pbkdf2:sha256') # Todo: dummy password
@@ -137,8 +149,17 @@ def create_app():
                 #print(new_user)
                 db.session.add(new_user)
                 db.session.commit()
+                user_data = {
+                    "user_name": token["userinfo"]["name"],
+                    "membership": 'regular',
+                    "user_type": 'customer',
+                    "token": token
+                }
+                query_string = urlencode(user_data, quote_via=quote)
+                return redirect(f'https://booboofashions.netlify.app/callback?{query_string}')
+                
                 #return redirect('http://localhost:4200/callback')
-                return redirect('https://booboofashions.netlify.app/callback')
+                #return redirect('https://booboofashions.netlify.app/callback')
 
         except Exception as e:
             print("i am in except though")
