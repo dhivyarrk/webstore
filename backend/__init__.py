@@ -16,7 +16,7 @@ from backend.modules.kidsclothes import KidsclothesList, Kidsclothes
 from backend.modules.kidsshoes import KidsshoesList, Kidsshoes
 from authlib.integrations.flask_client import OAuth
 from flask_session import Session
-
+import uuid
 import os
 import datetime
 #import random
@@ -25,13 +25,13 @@ userinfo_session = "something"
 def create_app():
     app = Flask(__name__)
 
-    app.config.from_mapping(
-        SECRET_KEY = "Miy_Secret_Key"
-    )
+    #app.config.from_mapping(
+    #    SECRET_KEY = "your_secret_key_here"
+    #)
 
     app.secret_key = 'your_secret_key_here'
 
-# Configure server-side session
+    # Configure server-side session
     app.config['SESSION_TYPE'] = 'filesystem'  # Options: 'redis', 'memcached', etc.
     app.config['SESSION_PERMANENT'] = True    # Optional: set to True if sessions should persist across browser restarts
     Session(app)
@@ -44,11 +44,9 @@ def create_app():
 
     #init_api(app)
     oauth = OAuth(app)
-
+    
     oauth.register(
     name= 'idp',
-    
-    #name='flask-app-project-442612',  # Name of your IdP
     client_id=os.getenv('client_id'),
     client_secret=os.getenv('client_secret'),
     access_token_url=os.getenv('access_token_url'),
@@ -80,15 +78,23 @@ def create_app():
     @app.route('/login')
     def login():
         print("i am in login")
+        state = str(uuid.uuid4())
+        session['state'] = state
+        print(f"Generated state: {state}")
         #return 'this is login'
         #return oauth.idp.authorize_redirect(redirect_uri='https://booboofashionsgunic.onrender.com/callback')
         #return oauth.idp.authorize_redirect(redirect_uri='http://localhost:5000/callback')
         redirect_uri = url_for('callback', _external=True)
-        return oauth.idp.authorize_redirect(redirect_uri=redirect_uri)
+        print(f"Redirect URI: {redirect_uri}")
+        return oauth.idp.authorize_redirect(redirect_uri=redirect_uri, state=state)
 
-
+    #'''
     @app.route('/callback')
+
     def callback():
+        print("in callback printing state")
+        print(session.get('state'))
+        print(request.args.get('state'))
         if session.get('state') != request.args.get('state'):
             print("State mismatch! CSRF detected. 400")
         token = oauth.idp.authorize_access_token()
@@ -137,8 +143,10 @@ def create_app():
     @app.route('/user_info')
     def user_info():
         try:
-            print("in user_info")
+            print("in userinfo_session")
             print(userinfo_session)
+            print("session['user']")
+            print(session['user'])
             user = User.query.filter_by(email_id=userinfo_session["email"]).first()
             if user:
                 token = SessionCheckResource.generate_token(user.user_id)
@@ -170,6 +178,7 @@ def create_app():
         return redirect('https://booboofashions.netlify.app/dashboard')
 
     return app
+    #'''
 """
 def init_api(app: Flask):
     db.init_app(app)
