@@ -28,6 +28,10 @@ def create_app():
     #app.config.from_mapping(
     #    SECRET_KEY = "your_secret_key_here"
     #)
+    app.config.update(
+    SESSION_COOKIE_SAMESITE='None',  # Allows cross-origin requests
+    SESSION_COOKIE_SECURE=True        # Required if using HTTPS in production
+    )
 
     app.secret_key = 'your_secret_key_here'
 
@@ -142,6 +146,7 @@ def create_app():
 
     @app.route('/user_info')
     def user_info():
+        print("in user info")
         try:
             print("in userinfo_session")
             print(userinfo_session)
