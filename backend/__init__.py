@@ -50,14 +50,14 @@ def create_app():
     oauth = OAuth(app)
     
     oauth.register(
-    name= 'idp',
+    name='idp',
     client_id=os.getenv('client_id'),
     client_secret=os.getenv('client_secret'),
     access_token_url=os.getenv('access_token_url'),
     authorize_url=os.getenv('authorize_url'),
     #api_base_url='https://idp.com/api',
     client_kwargs={'scope': 'openid profile email'},
-    server_metadata_url= os.getenv('server_metadata_url')
+    server_metadata_url=os.getenv('server_metadata_url')
     )
 
 
@@ -95,8 +95,8 @@ def create_app():
     #'''
     @app.route('/callback')
     def callback():
-        print("in callback printing state")
-        return jsonify({"error": "i am returning where"})
+        #print("in callback printing state")
+        #return jsonify({"error": "i am returning where"})
         #return ("hello")
         print(session.get('state'))
         print(request.args.get('state'))
