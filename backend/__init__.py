@@ -21,9 +21,6 @@ import uuid
 import os
 import datetime
 
-#import random
-
-userinfo_session = "something"
 def create_app():
     app = Flask(__name__)
 
@@ -46,9 +43,6 @@ def create_app():
     #CORS(app, supports_credentials=True, origins=["http://127.0.0.1:4200", "http://localhost:4200/"])
     #CORS(app, supports_credentials=True, origins="https://booboofashions.netlify.app/")
    
-     #, origins=['http://localhost:3000'])
-
-    #init_api(app)
     oauth = OAuth(app)
     
     oauth.register(
@@ -83,40 +77,22 @@ def create_app():
 
     @app.route('/login')
     def login():
-        print("i am in login")
         state = str(uuid.uuid4())
         session['state'] = state
         print(f"Generated state: {state}")
-        #return 'this is login'
         #return oauth.idp.authorize_redirect(redirect_uri='https://booboofashionsgunic.onrender.com/callback')
         #return oauth.idp.authorize_redirect(redirect_uri='http://localhost:5000/callback')
         redirect_uri = url_for('callback', _external=True)
         print(f"Redirect URI: {redirect_uri}")
         return oauth.idp.authorize_redirect(redirect_uri=redirect_uri, state=state)
 
-    #'''
     @app.route('/callback')
     def callback():
-        #print("in callback printing state")
-        #return jsonify({"error": "i am returning where"})
-        #return ("hello")
-        print(session.get('state'))
-        print(request.args.get('state'))
         if session.get('state') != request.args.get('state'):
             print("State mismatch! CSRF detected. 400")
         token = oauth.idp.authorize_access_token()
         user_info = token['userinfo']
-        #user_info = oauth.idp.parse_id_token(token)
         session['user'] = user_info
-        #print(session)
-        global userinfo_session
-        userinfo_session = session['user']
-        print("in global")
-        print(userinfo_session)
-        #print("incallabacl")
-        #print(userinfo)
-        #dummy contact_number to avoid gathering personal info for now
-        #contact_number = random.randint(10**((random.randint(1, 15)) - 1), 10**(random.randint(1, 15)) - 1)
         try:
             user = User.query.filter_by(email_id=token['userinfo']["email"]).first()
             token = SessionCheckResource.generate_token(user.user_id)
@@ -146,7 +122,6 @@ def create_app():
                     email_id=token["userinfo"]["email"],
                     user_type='customer'
                 )
-                #print(new_user)
                 db.session.add(new_user)
                 db.session.commit()
                 user_data = {
@@ -165,7 +140,7 @@ def create_app():
             print("i am in except though")
             return jsonify({"error": str(e)})
 
-
+    """
     @app.route('/user_info')
     def user_info():
         print("in user info")
@@ -195,7 +170,7 @@ def create_app():
             return jsonify({"error": str(e)})
         #return redirect('https://booboofashions.netlify.app/dashboard')
         #return redirect('http://localhost:4200/dashboard')
-
+        """
 
     @app.route('/logout')
     def logout():
@@ -205,18 +180,3 @@ def create_app():
         return redirect('https://booboofashions.netlify.app/dashboard')
 
     return app
-    #'''
-"""
-def init_api(app: Flask):
-    db.init_app(app)
-
-    migrate = Migrate(app, db)
-    from backend.models.webstoremodels import User, WomensProducts, KidsProducts, Categories, Orders, Shipments
-    api=Api(app)
-    api.add_resource(UserList, '/users')
-    api.add_resource(UserSignup, '/signup')
-    api.add_resource(SessionCheckResource, '/session-check')
-    api.add_resource(UserSignin, '/signin')
-    api.add_resource(WomensclothesList, '/womensclothes')
-    api.add_resource(Womensclothes,  '/womensclothes/<string:product_id>', methods=['DELETE', 'PUT'])
-"""
