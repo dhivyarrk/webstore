@@ -94,9 +94,10 @@ def create_app():
 
     #'''
     @app.route('/callback')
-
     def callback():
         print("in callback printing state")
+        return jsonify({"error": "i am returning where"})
+        #return ("hello")
         print(session.get('state'))
         print(request.args.get('state'))
         if session.get('state') != request.args.get('state'):
